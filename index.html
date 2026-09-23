@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Machine Monitor</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div>
+      <h1>Smart Machine Monitor</h1>
+      <p>Monitoramento industrial em tempo real</p>
+    </div>
+
+    <div class="connection-box">
+      <span id="mqttDot" class="dot offline"></span>
+      <span id="mqttStatus">MQTT Offline</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="cards-grid">
+
+      <div class="card">
+        <span class="card-title">Machine Status</span>
+        <strong id="machineStatus" class="status-value">
+          WAITING
+        </strong>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Production</span>
+        <strong id="production">0</strong>
+        <small>pieces</small>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Speed</span>
+        <strong id="speed">0.0</strong>
+        <small>pcs/min</small>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Temperature</span>
+        <strong id="temperature">0.0</strong>
+        <small>°C</small>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Emergency</span>
+        <strong id="emergency">OFF</strong>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Alarm</span>
+        <strong id="alarm">NONE</strong>
+      </div>
+
+    </section>
+
+    <section id="emergencyBanner" class="emergency-banner hidden">
+      <h2>EMERGENCY STOP ACTIVE</h2>
+      <p>Machine stopped - Alarm 900</p>
+    </section>
+
+    <section class="charts-grid">
+
+      <div class="chart-card">
+        <h2>Machine Speed</h2>
+        <canvas id="speedChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h2>Motor Temperature</h2>
+        <canvas id="temperatureChart"></canvas>
+      </div>
+
+    </section>
+
+    <section class="event-card">
+
+      <div class="event-header">
+        <h2>Event Log</h2>
+        <span id="lastUpdate">Waiting for data...</span>
+      </div>
+
+      <div id="eventLog" class="event-log">
+        <div class="event-item">
+          Dashboard initialized.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
