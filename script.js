@@ -28,6 +28,12 @@ const production =
 const speed =
   document.getElementById("speed");
 
+const productionPerHour =
+  document.getElementById("productionPerHour");
+
+const frequencyHz =
+  document.getElementById("frequencyHz");
+
 const temperature =
   document.getElementById("temperature");
 
@@ -73,7 +79,7 @@ const speedChart =
 
       datasets: [
         {
-          label: "Speed (pcs/min)",
+          label: "Production rate (pcs/min)",
           data: [],
           tension: 0.3,
           borderWidth: 2
@@ -317,12 +323,17 @@ function updateDashboard(data) {
   machineStatus.classList.remove(
     "status-running",
     "status-alarm",
+    "status-fault",
     "status-emergency"
   );
 
   if (
     data.status ===
-    "RUNNING"
+    "RUNNING" ||
+    data.status ===
+    "ACCELERATING" ||
+    data.status ===
+    "DECELERATING"
   ) {
 
     machineStatus.classList.add(
@@ -338,6 +349,17 @@ function updateDashboard(data) {
 
     machineStatus.classList.add(
       "status-alarm"
+    );
+
+  }
+
+  if (
+    data.status ===
+    "FAULT"
+  ) {
+
+    machineStatus.classList.add(
+      "status-fault"
     );
 
   }
@@ -360,11 +382,27 @@ function updateDashboard(data) {
     data.production ?? 0;
 
 
-  // ---------------- VELOCIDADE ----------------
+  // ---------------- PRODUÇÃO POR MINUTO ----------------
 
   speed.textContent =
     Number(
       data.speed ?? 0
+    ).toFixed(1);
+
+
+  // ---------------- PRODUÇÃO POR HORA ----------------
+
+  productionPerHour.textContent =
+    Number(
+      data.productionPerHour ?? 0
+    ).toFixed(0);
+
+
+  // ---------------- FREQUÊNCIA DO MOTOR ----------------
+
+  frequencyHz.textContent =
+    Number(
+      data.frequencyHz ?? 0
     ).toFixed(1);
 
 

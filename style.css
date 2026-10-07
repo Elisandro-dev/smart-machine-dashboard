@@ -4,10 +4,20 @@
   padding: 0;
 }
 
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-hover: #24334a;
+  --border: #334155;
+  --border-strong: #475569;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
 }
 
@@ -20,7 +30,7 @@ body {
   align-items: center;
 
   background: #111827;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
 }
 
 .topbar h1 {
@@ -29,7 +39,7 @@ body {
 
 .topbar p {
   margin-top: 5px;
-  color: #94a3b8;
+  color: var(--muted);
   font-size: 14px;
 }
 
@@ -38,7 +48,7 @@ body {
   align-items: center;
   gap: 8px;
 
-  background: #1e293b;
+  background: var(--panel);
   padding: 10px 14px;
   border-radius: 10px;
 
@@ -62,32 +72,35 @@ body {
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1500px;
   margin: auto;
-  padding: 30px;
+  padding: clamp(18px, 3vw, 30px);
 }
 
 .cards-grid {
   display: grid;
 
-  grid-template-columns:
-    repeat(auto-fit, minmax(180px, 1fr));
+  /* Mantém espaço suficiente para textos como OVERHEATING. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
   gap: 18px;
 }
 
 .card {
-  background: #1e293b;
+  min-width: 0;
+  overflow: hidden;
 
-  border: 1px solid #334155;
+  background: var(--panel);
+
+  border: 1px solid var(--border);
   border-radius: 14px;
 
-  padding: 22px;
+  padding: clamp(18px, 2vw, 22px);
 
   display: flex;
   flex-direction: column;
 
-  min-height: 140px;
+  min-height: 145px;
 
   justify-content: center;
 
@@ -96,23 +109,53 @@ body {
 
 .card:hover {
   transform: translateY(-3px);
-  border-color: #475569;
+  background: var(--panel-hover);
+  border-color: var(--border-strong);
 }
 
 .card-title {
-  color: #94a3b8;
+  color: var(--muted);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 12px;
+  line-height: 1.25;
 }
 
 .card strong {
-  font-size: 28px;
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Destaque do alarme: texto longo nunca fica apertado no cartão. */
+.card:has(#alarm) {
+  background: #242b3b;
+  border-color: #475569;
+}
+
+#alarm {
+  color: #f8fafc;
+  font-size: clamp(1.35rem, 1.55vw, 1.8rem);
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+@media (min-width: 1300px) {
+  .cards-grid {
+    /* Oito cartões em duas linhas, com leitura confortável. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .card small {
-  color: #94a3b8;
+  color: var(--muted);
   margin-top: 5px;
 }
 
@@ -124,12 +167,12 @@ body {
   color: #f59e0b;
 }
 
+.status-fault {
+  color: #ef4444;
+}
+
 .status-emergency {
   color: #ef4444;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
 }
 
 .emergency-banner {
@@ -183,9 +226,10 @@ body {
 }
 
 .chart-card {
-  background: #1e293b;
+  min-width: 0;
+  background: var(--panel);
 
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   border-radius: 14px;
 
   padding: 20px;
@@ -197,15 +241,16 @@ body {
 }
 
 .chart-card canvas {
+  width: 100% !important;
   max-height: 280px;
 }
 
 .event-card {
   margin-top: 22px;
 
-  background: #1e293b;
+  background: var(--panel);
 
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   border-radius: 14px;
 
   padding: 20px;
@@ -226,7 +271,8 @@ body {
 
 #lastUpdate {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--muted);
+  text-align: right;
 }
 
 .event-log {
@@ -237,10 +283,11 @@ body {
 .event-item {
   padding: 10px 12px;
 
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
 
   font-size: 13px;
   color: #cbd5e1;
+  overflow-wrap: anywhere;
 }
 
 .event-time {
@@ -260,8 +307,26 @@ body {
     padding: 15px;
   }
 
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #alarm {
+    font-size: 1.65rem;
+  }
+
   .charts-grid {
     grid-template-columns: 1fr;
+  }
+
+  .event-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #lastUpdate {
+    text-align: left;
   }
 
 }
